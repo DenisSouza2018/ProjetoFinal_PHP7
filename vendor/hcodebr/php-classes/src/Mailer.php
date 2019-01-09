@@ -9,9 +9,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class Mailer {
 	
-	const USERNAME = "xxxx@xxxx.com";
-	const PASSWORD = "xxxxx";
-	const NAME_FROM = "Suporte D";
+	const USERNAME = "denis.souza.rosa.2013@gmail.com";
+	const PASSWORD = "DenisSouza2013";
+	const NAME_FROM = "Suporte Denis Souza";
 
 	private $mail;
 

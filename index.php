@@ -7,6 +7,7 @@ use \Slim\Slim;
 use \Hcode\Page;
 use \Hcode\PageAdmin;
 use \Hcode\Model\User;
+use \Hcode\Model\Category;
 
 $app = new Slim();
 
@@ -113,22 +114,29 @@ $app->get('/admin/users/:iduser', function($iduser){
 	));
 });
 
-$app->post("/admin/users/create",function() {
+$app->post("/admin/users/create", function () {
 
-	User::verifyLogin();
+ 	User::verifyLogin();
 
 	$user = new User();
 
-	$_POST["inadmin"] = (isset($_POST["inadmin"]))?1:0;
+ 	$_POST["inadmin"] = (isset($_POST["inadmin"])) ? 1 : 0;
 
-	$user->setData($_POST);
+ 	$_POST['despassword'] = password_hash($_POST["despassword"], PASSWORD_DEFAULT, [
+
+ 		"cost"=>12
+
+ 	]);
+
+ 	$user->setData($_POST);
 
 	$user->save();
 
 	header("Location: /admin/users");
-	exit;
+ 	exit;
 
 });
+
 
 
 $app->post("/admin/users/:iduser",function($iduser) {
@@ -220,6 +228,81 @@ $app->post("/admin/forgot/reset", function(){
 
 	$page->setTpl("forgot-reset-success");
 
+});
+
+$app->get("/admin/categories", function(){
+
+	//verifica se a pessoa esta logada ou não
+	User::verifyLogin();
+
+	$categories = Category::listAll();//uma classe Category com o metodo ListAll
+
+	$page = new PageAdmin();
+	$page->setTpl("categories", [
+		'categories'=>$categories//o template recebe um array
+	]);
+
+
+});
+
+$app->get("/admin/categories/create", function(){//rota para criar categoria
+	//verifica se a pessoa esta logada ou não
+	User::verifyLogin();
+	$page = new PageAdmin();
+	$page->setTpl("categories-create");
+});
+
+
+
+$app->post("/admin/categories/create", function(){//rota para criar categoria
+	//verifica se a pessoa esta logada ou não
+	User::verifyLogin();
+	$category = new Category();
+	$category->setData($_POST);
+	$category->save();
+	header('Location: /admin/categories');
+	exit;
+});
+
+$app->get("/admin/categories/:idcategory/delete", function($idcategory){
+	//verifica se a pessoa esta logada ou não
+	User::verifyLogin();
+	$category = new Category();
+	$category->get((int)$idcategory); //metodo para carregar o objto pra ter certeza que ele ainda existe
+	$category->delete();
+	header('Location: /admin/categories');
+	exit;
+});
+
+
+$app->get("/admin/categories/:idcategory", function($idcategory){
+	//verifica se a pessoa esta logada ou não
+	User::verifyLogin();
+
+	$category = new Category();
+
+	$category->get((int)$idcategory);
+
+	$page = new PageAdmin();
+	$page->setTpl("categories-update", [
+		'category'=>$category->getValues()
+	]);
+});
+
+$app->post("/admin/categories/:idcategory", function($idcategory){
+	//verifica se a pessoa esta logada ou não
+	User::verifyLogin();
+
+	$category = new Category();
+
+	$category->get((int)$idcategory);
+
+	$category->setData($_POST);
+
+	$category->save();
+
+	header('Location: /admin/categories');
+	exit;
 });
 
 $app->run();
