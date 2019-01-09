@@ -6,7 +6,6 @@ use \Hcode\DB\Sql;
 use \Hcode\Model;
 use \Hcode\Mailer;
 
-
 class User extends Model{
 
 	const SESSION = "User";
