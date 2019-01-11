@@ -128,7 +128,7 @@ class Cart extends Model {
 	}
 
 	//**************************************
-	public function getProductsTotals()
+	public function getProductsTotals()//Traz a soma dos produto
 	{
 		$sql = new Sql();
 		$results = $sql->select("
