@@ -100,6 +100,7 @@ class Category extends Model {
 			':idcategory'=>$this->getidcategory()
 		]);
 		$resultTotal = $sql->select("SELECT FOUND_ROWS() AS nrtotal;");
+		
 		return [
 			'data'=>Product::checkList($results),
 			'total'=>(int)$resultTotal[0]["nrtotal"],
