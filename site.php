@@ -4,8 +4,7 @@ use \Hcode\Page;
 
 use \Hcode\Model\Product;
 use \Hcode\Model\Category;
-
-//use \Hcode\Model\Cart;
+use \Hcode\Model\Cart;
 //use \Hcode\Model\Address;
 //use \Hcode\Model\User;
 //use \Hcode\Model\Order;
@@ -60,12 +59,17 @@ $app->get("/products/:desurl", function($desurl){
 	$product->getFromURL($desurl);
 
 	$page = new Page();
-	
+
 	$page->setTpl("product-detail", [
 		'product'=>$product->getValues(),
 		'categories'=>$product->getCategories()
 	]);
 });
+
+//*********************************
+
+
+
 
 $app->get("/cart", function(){
 	$cart = Cart::getFromSession();
@@ -76,6 +80,7 @@ $app->get("/cart", function(){
 		'error'=>Cart::getMsgError()
 	]);
 });
+
 
 $app->get("/cart/:idproduct/add", function($idproduct){
 	$product = new Product();
