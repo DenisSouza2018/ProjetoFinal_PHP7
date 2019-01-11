@@ -2,10 +2,9 @@
 
 use \Hcode\Page;
 
-
-
 use \Hcode\Model\Product;
-//use \Hcode\Model\Category;
+use \Hcode\Model\Category;
+
 //use \Hcode\Model\Cart;
 //use \Hcode\Model\Address;
 //use \Hcode\Model\User;
@@ -24,17 +23,40 @@ $app->get('/', function() {
 });
 
 $app->get("/categories/:idcategory", function($idcategory){
-	$page = (isset($_GET['page'])) ? (int)$_GET['page'] : 1;
+
 	$category = new Category();
+	
 	$category->get((int)$idcategory);
+
+	$page = new Page();
+
+	$page->setTpl("category", [
+		'category'=>$category->getValues(),
+		'products'=>Product::checkList($category->getProducts())
+	]);
+});
+
+/*
+$app->get("/categories/:idcategory", function($idcategory){
+	
+	$page = (isset($_GET['page'])) ? (int)$_GET['page'] : 1;
+	
+	$category = new Category();
+	
+	$category->get((int)$idcategory);
+	
 	$pagination = $category->getProductsPage($page);
+	
 	$pages = [];
+	
 	for ($i=1; $i <= $pagination['pages']; $i++) { 
 		array_push($pages, [
 			'link'=>'/categories/'.$category->getidcategory().'?page='.$i,
 			'page'=>$i
 		]);
+	
 	}
+
 	$page = new Page();
 	$page->setTpl("category", [
 		'category'=>$category->getValues(),
@@ -42,6 +64,7 @@ $app->get("/categories/:idcategory", function($idcategory){
 		'pages'=>$pages
 	]);
 });
+
 $app->get("/products/:desurl", function($desurl){
 	$product = new Product();
 	$product->getFromURL($desurl);
@@ -51,6 +74,7 @@ $app->get("/products/:desurl", function($desurl){
 		'categories'=>$product->getCategories()
 	]);
 });
+
 $app->get("/cart", function(){
 	$cart = Cart::getFromSession();
 	$page = new Page();
@@ -60,6 +84,7 @@ $app->get("/cart", function(){
 		'error'=>Cart::getMsgError()
 	]);
 });
+
 $app->get("/cart/:idproduct/add", function($idproduct){
 	$product = new Product();
 	$product->get((int)$idproduct);
@@ -472,6 +497,6 @@ $app->post("/profile/change-password", function(){
 	exit;
 });
 
-
+*/
 
 ?>
