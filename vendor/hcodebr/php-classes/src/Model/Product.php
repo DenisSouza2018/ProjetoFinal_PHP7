@@ -23,7 +23,7 @@ class Product extends Model {
 
 	
 
-	
+	//**********************************************
 	public function save()
 	{
 		$sql = new Sql();
@@ -39,6 +39,7 @@ class Product extends Model {
 		));
 		$this->setData($results[0]);
 	}
+	//**********************************************
 	public function get($idproduct)
 	{
 		$sql = new Sql();
@@ -47,6 +48,8 @@ class Product extends Model {
 		]);
 		$this->setData($results[0]);
 	}
+
+	//**********************************************
 	public function delete()
 	{
 		$sql = new Sql();
@@ -54,6 +57,7 @@ class Product extends Model {
 			':idproduct'=>$this->getidproduct()
 		]);
 	}
+	//**********************************************
 	public function checkPhoto()
 	{
 		if (file_exists(
@@ -70,7 +74,7 @@ class Product extends Model {
 		}
 		return $this->setdesphoto($url);
 	}
-
+	//**********************************************
 	public function getValues()
 	{
 		$this->checkPhoto();
@@ -79,7 +83,7 @@ class Product extends Model {
 
 		return $values;
 	}
-
+	//**********************************************
 
 		public function setPhoto($file)
 	{
@@ -108,15 +112,18 @@ class Product extends Model {
 		$this->checkPhoto();
 	}
 
-	
+	//**********************************************
 	public function getFromURL($desurl)
 	{
+		// connect banco de dados
 		$sql = new Sql();
 		$rows = $sql->select("SELECT * FROM tb_products WHERE desurl = :desurl LIMIT 1", [
 			':desurl'=>$desurl
 		]);
 		$this->setData($rows[0]);
 	}
+
+	//**********************************************
 	public function getCategories()
 	{
 		$sql = new Sql();
@@ -126,6 +133,7 @@ class Product extends Model {
 			':idproduct'=>$this->getidproduct()
 		]);
 	}
+	//**********************************************
 	public static function getPage($page = 1, $itemsPerPage = 10)
 	{
 		$start = ($page - 1) * $itemsPerPage;
@@ -143,6 +151,7 @@ class Product extends Model {
 			'pages'=>ceil($resultTotal[0]["nrtotal"] / $itemsPerPage)
 		];
 	}
+	//**********************************************
 	public static function getPageSearch($search, $page = 1, $itemsPerPage = 10)
 	{
 		$start = ($page - 1) * $itemsPerPage;
