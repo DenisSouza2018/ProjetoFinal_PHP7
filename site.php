@@ -69,8 +69,6 @@ $app->get("/products/:desurl", function($desurl){
 //*********************************
 
 
-
-
 $app->get("/cart", function(){
 	$cart = Cart::getFromSession();
 	$page = new Page();
@@ -81,12 +79,17 @@ $app->get("/cart", function(){
 	]);
 });
 
+//*********************************
 
 $app->get("/cart/:idproduct/add", function($idproduct){
 	$product = new Product();
+
 	$product->get((int)$idproduct);
+
 	$cart = Cart::getFromSession();
+
 	$qtd = (isset($_GET['qtd'])) ? (int)$_GET['qtd'] : 1;
+	
 	for ($i = 0; $i < $qtd; $i++) {
 		
 		$cart->addProduct($product);
@@ -94,6 +97,8 @@ $app->get("/cart/:idproduct/add", function($idproduct){
 	header("Location: /cart");
 	exit;
 });
+
+//*********************************
 $app->get("/cart/:idproduct/minus", function($idproduct){
 	$product = new Product();
 	$product->get((int)$idproduct);
@@ -102,6 +107,8 @@ $app->get("/cart/:idproduct/minus", function($idproduct){
 	header("Location: /cart");
 	exit;
 });
+
+//*********************************
 $app->get("/cart/:idproduct/remove", function($idproduct){
 	$product = new Product();
 	$product->get((int)$idproduct);
@@ -110,12 +117,16 @@ $app->get("/cart/:idproduct/remove", function($idproduct){
 	header("Location: /cart");
 	exit;
 });
+
+//**********************************************************
 $app->post("/cart/freight", function(){
 	$cart = Cart::getFromSession();
 	$cart->setFreight($_POST['zipcode']);
 	header("Location: /cart");
 	exit;
 });
+
+//**********************************************************
 $app->get("/checkout", function(){
 	User::verifyLogin(false);
 	$address = new Address();
@@ -145,6 +156,8 @@ $app->get("/checkout", function(){
 		'error'=>Address::getMsgError()
 	]);
 });
+
+//**********************************************************
 $app->post("/checkout", function(){
 	User::verifyLogin(false);
 	if (!isset($_POST['zipcode']) || $_POST['zipcode'] === '') {
@@ -204,6 +217,8 @@ $app->post("/checkout", function(){
 	}
 	exit;
 });
+
+//**********************************************************
 $app->get("/order/:idorder/pagseguro", function($idorder){
 	User::verifyLogin(false);
 	$order = new Order();
@@ -223,6 +238,8 @@ $app->get("/order/:idorder/pagseguro", function($idorder){
 		]
 	]);
 });
+
+//**********************************************************
 $app->get("/order/:idorder/paypal", function($idorder){
 	User::verifyLogin(false);
 	$order = new Order();
@@ -238,6 +255,8 @@ $app->get("/order/:idorder/paypal", function($idorder){
 		'products'=>$cart->getProducts()
 	]);
 });
+
+//**********************************************************
 $app->get("/login", function(){
 	$page = new Page();
 	$page->setTpl("login", [
@@ -246,6 +265,9 @@ $app->get("/login", function(){
 		'registerValues'=>(isset($_SESSION['registerValues'])) ? $_SESSION['registerValues'] : ['name'=>'', 'email'=>'', 'phone'=>'']
 	]);
 });
+
+
+//**********************************************************
 $app->post("/login", function(){
 	try {
 		User::login($_POST['login'], $_POST['password']);
@@ -255,11 +277,16 @@ $app->post("/login", function(){
 	header("Location: /checkout");
 	exit;
 });
+
+
+//**********************************************************
 $app->get("/logout", function(){
 	User::logout();
 	header("Location: /login");
 	exit;
 });
+
+//**********************************************************
 $app->post("/register", function(){
 	$_SESSION['registerValues'] = $_POST;
 	if (!isset($_POST['name']) || $_POST['name'] == '') {
@@ -296,19 +323,27 @@ $app->post("/register", function(){
 	header('Location: /checkout');
 	exit;
 });
+
+//**********************************************************
 $app->get("/forgot", function() {
 	$page = new Page();
 	$page->setTpl("forgot");	
 });
+
+//**********************************************************
 $app->post("/forgot", function(){
 	$user = User::getForgot($_POST["email"], false);
 	header("Location: /forgot/sent");
 	exit;
 });
+
+//**********************************************************
 $app->get("/forgot/sent", function(){
 	$page = new Page();
 	$page->setTpl("forgot-sent");	
 });
+
+//**********************************************************
 $app->get("/forgot/reset", function(){
 	$user = User::validForgotDecrypt($_GET["code"]);
 	$page = new Page();
@@ -317,6 +352,8 @@ $app->get("/forgot/reset", function(){
 		"code"=>$_GET["code"]
 	));
 });
+
+//**********************************************************
 $app->post("/forgot/reset", function(){
 	$forgot = User::validForgotDecrypt($_POST["code"]);	
 	User::setFogotUsed($forgot["idrecovery"]);
@@ -327,6 +364,8 @@ $app->post("/forgot/reset", function(){
 	$page = new Page();
 	$page->setTpl("forgot-reset-success");
 });
+
+//**********************************************************
 $app->get("/profile", function(){
 	User::verifyLogin(false);
 	$user = User::getFromSession();
@@ -337,6 +376,8 @@ $app->get("/profile", function(){
 		'profileError'=>User::getError()
 	]);
 });
+
+//**********************************************************
 $app->post("/profile", function(){
 	User::verifyLogin(false);
 	if (!isset($_POST['desperson']) || $_POST['desperson'] === '') {
@@ -366,6 +407,8 @@ $app->post("/profile", function(){
 	header('Location: /profile');
 	exit;
 });
+
+//**********************************************************
 $app->get("/order/:idorder", function($idorder){
 	User::verifyLogin(false);
 	$order = new Order();
@@ -375,6 +418,8 @@ $app->get("/order/:idorder", function($idorder){
 		'order'=>$order->getValues()
 	]);
 });
+
+//**********************************************************
 $app->get("/boleto/:idorder", function($idorder){
 	User::verifyLogin(false);
 	$order = new Order();
@@ -429,6 +474,8 @@ $app->get("/boleto/:idorder", function($idorder){
 	require_once($path . "funcoes_itau.php");
 	require_once($path . "layout_itau.php");
 });
+
+//**********************************************************
 $app->get("/profile/orders", function(){
 	User::verifyLogin(false);
 	$user = User::getFromSession();
