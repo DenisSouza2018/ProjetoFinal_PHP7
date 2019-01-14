@@ -5,8 +5,8 @@ use \Hcode\Page;
 use \Hcode\Model\Product;
 use \Hcode\Model\Category;
 use \Hcode\Model\Cart;
-//use \Hcode\Model\Address;
-//use \Hcode\Model\User;
+use \Hcode\Model\Address;
+use \Hcode\Model\User;
 //use \Hcode\Model\Order;
 //use \Hcode\Model\OrderStatus;
 
@@ -22,7 +22,7 @@ $app->get('/', function() {
 });
 
 
-
+//*************************************************
 $app->get("/categories/:idcategory", function($idcategory){
 	
 	$page = (isset($_GET['page'])) ? (int)$_GET['page'] : 1;
@@ -128,9 +128,12 @@ $app->post("/cart/freight", function(){
 
 //**********************************************************
 $app->get("/checkout", function(){
+	
 	User::verifyLogin(false);
+
 	$address = new Address();
 	$cart = Cart::getFromSession();
+
 	if (!isset($_GET['zipcode'])) {
 		$_GET['zipcode'] = $cart->getdeszipcode();
 	}
@@ -484,6 +487,8 @@ $app->get("/profile/orders", function(){
 		'orders'=>$user->getOrders()
 	]);
 });
+
+//*************************************************
 $app->get("/profile/orders/:idorder", function($idorder){
 	User::verifyLogin(false);
 	$order = new Order();
