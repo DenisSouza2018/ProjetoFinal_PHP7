@@ -162,6 +162,7 @@ $app->get("/checkout", function(){
 
 //**********************************************************
 $app->post("/checkout", function(){
+	
 	User::verifyLogin(false);
 	if (!isset($_POST['zipcode']) || $_POST['zipcode'] === '') {
 		Address::setMsgError("Informe o CEP.");
@@ -419,7 +420,7 @@ $app->post("/profile", function(){
 	$_POST['deslogin'] = $_POST['desemail'];
 	$user->setData($_POST);
 	$user->save();
-	
+
 	User::setSuccess("Dados alterados com sucesso!");
 	header('Location: /profile');
 	exit;
