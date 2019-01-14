@@ -128,7 +128,7 @@ $app->post("/cart/freight", function(){
 
 //**********************************************************
 $app->get("/checkout", function(){
-	
+
 	User::verifyLogin(false);
 
 	$address = new Address();
@@ -291,24 +291,27 @@ $app->get("/logout", function(){
 
 //**********************************************************
 $app->post("/register", function(){
+
 	$_SESSION['registerValues'] = $_POST;
+
 	if (!isset($_POST['name']) || $_POST['name'] == '') {
-		User::setErrorRegister("Preencha o seu nome.");
+		User::setErrorRegister("Preencha o seu Nome: ");
 		header("Location: /login");
 		exit;
 	}
+
 	if (!isset($_POST['email']) || $_POST['email'] == '') {
 		User::setErrorRegister("Preencha o seu e-mail.");
 		header("Location: /login");
 		exit;
 	}
 	if (!isset($_POST['password']) || $_POST['password'] == '') {
-		User::setErrorRegister("Preencha a senha.");
+		User::setErrorRegister("Preencha a Senha:");
 		header("Location: /login");
 		exit;
 	}
 	if (User::checkLoginExist($_POST['email']) === true) {
-		User::setErrorRegister("Este endereço de e-mail já está sendo usado por outro usuário.");
+		User::setErrorRegister("Este endereço de e-mail já está cadastrado por favor informe outro email");
 		header("Location: /login");
 		exit;
 	}
