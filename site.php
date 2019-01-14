@@ -351,8 +351,11 @@ $app->get("/forgot/sent", function(){
 
 //**********************************************************
 $app->get("/forgot/reset", function(){
+
 	$user = User::validForgotDecrypt($_GET["code"]);
+
 	$page = new Page();
+
 	$page->setTpl("forgot-reset", array(
 		"name"=>$user["desperson"],
 		"code"=>$_GET["code"]
@@ -361,6 +364,7 @@ $app->get("/forgot/reset", function(){
 
 //**********************************************************
 $app->post("/forgot/reset", function(){
+
 	$forgot = User::validForgotDecrypt($_POST["code"]);	
 	User::setFogotUsed($forgot["idrecovery"]);
 	$user = new User();
@@ -373,6 +377,7 @@ $app->post("/forgot/reset", function(){
 
 //**********************************************************
 $app->get("/profile", function(){
+	
 	User::verifyLogin(false);
 	$user = User::getFromSession();
 	$page = new Page();
