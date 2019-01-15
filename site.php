@@ -222,6 +222,8 @@ $app->post("/checkout", function(){
 	]);
 
 	$order->save();
+
+	
 	switch ((int)$_POST['payment-method']) {
 		case 1:
 		header("Location: /order/".$order->getidorder()."/pagseguro");
@@ -230,6 +232,8 @@ $app->post("/checkout", function(){
 		header("Location: /order/".$order->getidorder()."/paypal");
 		break;
 	}
+
+
 	exit;
 });
 
@@ -452,6 +456,7 @@ $app->get("/order/:idorder", function($idorder){
 
 	$order->get((int)$idorder);
 
+
 	$page = new Page();
 
 	$page->setTpl("payment", [
@@ -488,8 +493,8 @@ $app->get("/boleto/:idorder", function($idorder){
 	$dadosboleto["demonstrativo3"] = "";
 	$dadosboleto["instrucoes1"] = "- Sr. Caixa, cobrar multa de 2% após o vencimento";
 	$dadosboleto["instrucoes2"] = "- Receber até 10 dias após o vencimento";
-	$dadosboleto["instrucoes3"] = "- Em caso de dúvidas entre em contato conosco: denis@email.com";
-	$dadosboleto["instrucoes4"] = "&nbsp; Emitido pelo sistema Projeto Loja Denis Souza";
+	$dadosboleto["instrucoes3"] = "- Em caso de dúvidas entre em contato conosco: suporte@hcode.com.br";
+	$dadosboleto["instrucoes4"] = "&nbsp; Emitido pelo sistema Projeto Loja Hcode E-commerce - www.hcode.com.br";
 	// DADOS OPCIONAIS DE ACORDO COM O BANCO OU CLIENTE
 	$dadosboleto["quantidade"] = "";
 	$dadosboleto["valor_unitario"] = "";
@@ -517,29 +522,44 @@ $app->get("/boleto/:idorder", function($idorder){
 
 //**********************************************************
 $app->get("/profile/orders", function(){
+
 	User::verifyLogin(false);
+
 	$user = User::getFromSession();
+
 	$page = new Page();
+
 	$page->setTpl("profile-orders", [
 		'orders'=>$user->getOrders()
 	]);
 });
 
 //*************************************************
+
+
 $app->get("/profile/orders/:idorder", function($idorder){
 	User::verifyLogin(false);
+
 	$order = new Order();
+
 	$order->get((int)$idorder);
+
 	$cart = new Cart();
+
 	$cart->get((int)$order->getidcart());
+
 	$cart->getCalculateTotal();
+
 	$page = new Page();
+
 	$page->setTpl("profile-orders-detail", [
 		'order'=>$order->getValues(),
 		'cart'=>$cart->getValues(),
 		'products'=>$cart->getProducts()
 	]);	
 });
+
+//*************************************************
 $app->get("/profile/change-password", function(){
 	User::verifyLogin(false);
 	$page = new Page();
@@ -548,6 +568,8 @@ $app->get("/profile/change-password", function(){
 		'changePassSuccess'=>User::getSuccess()
 	]);
 });
+
+//*************************************************
 $app->post("/profile/change-password", function(){
 	User::verifyLogin(false);
 	if (!isset($_POST['current_pass']) || $_POST['current_pass'] === '') {
@@ -582,7 +604,7 @@ $app->post("/profile/change-password", function(){
 	header("Location: /profile/change-password");
 	exit;
 });
-
-
-
 ?>
+
+
+
