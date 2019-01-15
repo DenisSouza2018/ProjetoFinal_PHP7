@@ -76,6 +76,7 @@ $app->get("/admin/orders", function(){
 	} else {
 		$pagination = Order::getPage($page);
 	}
+	
 	$pages = [];
 	for ($x = 0; $x < $pagination['pages']; $x++)
 	{
@@ -87,6 +88,7 @@ $app->get("/admin/orders", function(){
 			'text'=>$x+1
 		]);
 	}
+
 	$page = new PageAdmin();
 	$page->setTpl("orders", [
 		"orders"=>$pagination['data'],
