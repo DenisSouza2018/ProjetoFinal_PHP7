@@ -6,20 +6,35 @@ use \Hcode\Model\Category;
 use \Hcode\Model\Product;
 
 $app->get("/admin/categories", function(){
-
-	//verifica se a pessoa esta logada ou não
 	User::verifyLogin();
-
-	$categories = Category::listAll();//uma classe Category com o metodo ListAll
-
+	$search = (isset($_GET['search'])) ? $_GET['search'] : "";
+	$page = (isset($_GET['page'])) ? (int)$_GET['page'] : 1;
+	if ($search != '') {
+		$pagination = Category::getPageSearch($search, $page);
+	} else {
+		$pagination = Category::getPage($page);
+	}
+	$pages = [];
+	for ($x = 0; $x < $pagination['pages']; $x++)
+	{
+		array_push($pages, [
+			'href'=>'/admin/categories?'.http_build_query([
+				'page'=>$x+1,
+				'search'=>$search
+			]),
+			'text'=>$x+1
+		]);
+	}
 	$page = new PageAdmin();
 	$page->setTpl("categories", [
-		'categories'=>$categories//o template recebe um array
-	]);
-
-
+		"categories"=>$pagination['data'],
+		"search"=>$search,
+		"pages"=>$pages
+	]);	
 });
 
+
+//*************************************************
 $app->get("/admin/categories/create", function(){//rota para criar categoria
 	//verifica se a pessoa esta logada ou não
 	User::verifyLogin();
@@ -29,6 +44,7 @@ $app->get("/admin/categories/create", function(){//rota para criar categoria
 
 
 
+//*************************************************
 $app->post("/admin/categories/create", function(){//rota para criar categoria
 	//verifica se a pessoa esta logada ou não
 	User::verifyLogin();
@@ -39,6 +55,8 @@ $app->post("/admin/categories/create", function(){//rota para criar categoria
 	exit;
 });
 
+
+//*************************************************
 $app->get("/admin/categories/:idcategory/delete", function($idcategory){
 	//verifica se a pessoa esta logada ou não
 	User::verifyLogin();
@@ -50,6 +68,7 @@ $app->get("/admin/categories/:idcategory/delete", function($idcategory){
 });
 
 
+//*************************************************
 $app->get("/admin/categories/:idcategory", function($idcategory){
 	//verifica se a pessoa esta logada ou não
 	User::verifyLogin();
@@ -64,6 +83,8 @@ $app->get("/admin/categories/:idcategory", function($idcategory){
 	]);
 });
 
+
+//*************************************************
 $app->post("/admin/categories/:idcategory", function($idcategory){
 	//verifica se a pessoa esta logada ou não
 	User::verifyLogin();
@@ -82,6 +103,7 @@ $app->post("/admin/categories/:idcategory", function($idcategory){
 
 
 
+//*************************************************
 $app->get("/admin/categories/:idcategory/products", function($idcategory){
 
 	User::verifyLogin();
@@ -98,6 +120,7 @@ $app->get("/admin/categories/:idcategory/products", function($idcategory){
 });
 
 
+//*************************************************
 $app->get("/admin/categories/:idcategory/products/:idproduct/add", function($idcategory, $idproduct){
 	User::verifyLogin();
 
@@ -113,6 +136,8 @@ $app->get("/admin/categories/:idcategory/products/:idproduct/add", function($idc
 	exit;
 });
 
+
+//*************************************************
 $app->get("/admin/categories/:idcategory/products/:idproduct/remove", function($idcategory, $idproduct){
 	
 	User::verifyLogin();

@@ -128,7 +128,7 @@ class Category extends Model {
 			':idproduct'=>$product->getidproduct()
 		]);
 	}
-		/*	
+		
 	public static function getPage($page = 1, $itemsPerPage = 10)
 	{
 		$start = ($page - 1) * $itemsPerPage;
@@ -166,7 +166,7 @@ class Category extends Model {
 			'pages'=>ceil($resultTotal[0]["nrtotal"] / $itemsPerPage)
 		];
 	}
-*/
+
 } 
  ?>
 
