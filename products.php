@@ -9,12 +9,14 @@ $app->get("/admin/products", function(){
 
 	$search = (isset($_GET['search'])) ? $_GET['search'] : "";
 	$page = (isset($_GET['page'])) ? (int)$_GET['page'] : 1;
+
 	if ($search != '') {
 		$pagination = Product::getPageSearch($search, $page);
 	} else {
 		$pagination = Product::getPage($page);
 	}
 	$pages = [];
+
 	for ($x = 0; $x < $pagination['pages']; $x++)
 	{
 		array_push($pages, [
@@ -25,6 +27,7 @@ $app->get("/admin/products", function(){
 			'text'=>$x+1
 		]);
 	}
+
 	$products = Product::listAll();
 	$page = new PageAdmin();
 	$page->setTpl("products", [
@@ -34,6 +37,7 @@ $app->get("/admin/products", function(){
 	]);
 });
 
+//*******************************************
 $app->get("/admin/products/create", function(){
 
 	User::verifyLogin();
@@ -45,6 +49,7 @@ $app->get("/admin/products/create", function(){
 });
 
 
+//*******************************************
 $app->post("/admin/products/create", function(){
 	User::verifyLogin();
 
@@ -59,6 +64,7 @@ $app->post("/admin/products/create", function(){
 });
 
 
+//*******************************************
 $app->get("/admin/products/:idproduct", function($idproduct){
 
 	User::verifyLogin();
@@ -72,6 +78,7 @@ $app->get("/admin/products/:idproduct", function($idproduct){
 
 });
 
+//*******************************************
 $app->post("/admin/products/:idproduct", function($idproduct){
 
 	User::verifyLogin();
@@ -86,6 +93,7 @@ $app->post("/admin/products/:idproduct", function($idproduct){
 	exit;
 });
 
+//*******************************************
 $app->get("/admin/products/:idproduct/delete", function($idproduct){
 	User::verifyLogin();
 	$product = new Product();
