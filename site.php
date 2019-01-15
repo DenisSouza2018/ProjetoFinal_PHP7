@@ -7,8 +7,8 @@ use \Hcode\Model\Category;
 use \Hcode\Model\Cart;
 use \Hcode\Model\Address;
 use \Hcode\Model\User;
-//use \Hcode\Model\Order;
-//use \Hcode\Model\OrderStatus;
+use \Hcode\Model\Order;
+use \Hcode\Model\OrderStatus;
 
 $app->get('/', function() {
 	
@@ -194,15 +194,25 @@ $app->post("/checkout", function(){
 		header('Location: /checkout');
 		exit;
 	}
+
 	$user = User::getFromSession();
+
 	$address = new Address();
+
 	$_POST['deszipcode'] = $_POST['zipcode'];
+
 	$_POST['idperson'] = $user->getidperson();
+
 	$address->setData($_POST);
+
 	$address->save();
+
 	$cart = Cart::getFromSession();
+
 	$cart->getCalculateTotal();
+
 	$order = new Order();
+
 	$order->setData([
 		'idcart'=>$cart->getidcart(),
 		'idaddress'=>$address->getidaddress(),
@@ -210,6 +220,7 @@ $app->post("/checkout", function(){
 		'idstatus'=>OrderStatus::EM_ABERTO,
 		'vltotal'=>$cart->getvltotal()
 	]);
+
 	$order->save();
 	switch ((int)$_POST['payment-method']) {
 		case 1:
@@ -225,13 +236,18 @@ $app->post("/checkout", function(){
 //**********************************************************
 $app->get("/order/:idorder/pagseguro", function($idorder){
 	User::verifyLogin(false);
+
 	$order = new Order();
+
 	$order->get((int)$idorder);
+
 	$cart = $order->getCart();
 	$page = new Page([
 		'header'=>false,
 		'footer'=>false
 	]);
+
+
 	$page->setTpl("payment-pagseguro", [
 		'order'=>$order->getValues(),
 		'cart'=>$cart->getValues(),
@@ -429,10 +445,15 @@ $app->post("/profile", function(){
 
 //**********************************************************
 $app->get("/order/:idorder", function($idorder){
+
 	User::verifyLogin(false);
+
 	$order = new Order();
+
 	$order->get((int)$idorder);
+
 	$page = new Page();
+
 	$page->setTpl("payment", [
 		'order'=>$order->getValues()
 	]);
@@ -467,8 +488,8 @@ $app->get("/boleto/:idorder", function($idorder){
 	$dadosboleto["demonstrativo3"] = "";
 	$dadosboleto["instrucoes1"] = "- Sr. Caixa, cobrar multa de 2% após o vencimento";
 	$dadosboleto["instrucoes2"] = "- Receber até 10 dias após o vencimento";
-	$dadosboleto["instrucoes3"] = "- Em caso de dúvidas entre em contato conosco: suporte@hcode.com.br";
-	$dadosboleto["instrucoes4"] = "&nbsp; Emitido pelo sistema Projeto Loja Hcode E-commerce - www.hcode.com.br";
+	$dadosboleto["instrucoes3"] = "- Em caso de dúvidas entre em contato conosco: denis@email.com";
+	$dadosboleto["instrucoes4"] = "&nbsp; Emitido pelo sistema Projeto Loja Denis Souza";
 	// DADOS OPCIONAIS DE ACORDO COM O BANCO OU CLIENTE
 	$dadosboleto["quantidade"] = "";
 	$dadosboleto["valor_unitario"] = "";
