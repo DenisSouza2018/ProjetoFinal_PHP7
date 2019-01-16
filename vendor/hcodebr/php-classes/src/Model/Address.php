@@ -3,6 +3,7 @@ namespace Hcode\Model;
 use \Hcode\DB\Sql;
 use \Hcode\Model;
 class Address extends Model {
+
 	const SESSION_ERROR = "AddressError";
 	public static function getCEP($nrcep)
 	{
@@ -15,6 +16,9 @@ class Address extends Model {
 		curl_close($ch);
 		return $data;
 	}
+	
+	
+	//*******************************************************
 	public function loadFromCEP($nrcep)
 	{
 		$data = Address::getCEP($nrcep);
@@ -28,6 +32,7 @@ class Address extends Model {
 			$this->setdeszipcode($nrcep);
 		}
 	}
+	//*******************************************************
 	public function save()
 	{
 		$sql = new Sql();
@@ -47,16 +52,25 @@ class Address extends Model {
 			$this->setData($results[0]);
 		}
 	}
+
+
+	//*******************************************************
 	public static function setMsgError($msg)
 	{
 		$_SESSION[Address::SESSION_ERROR] = $msg;
 	}
+
+
+	//*******************************************************
 	public static function getMsgError()
 	{
 		$msg = (isset($_SESSION[Address::SESSION_ERROR])) ? $_SESSION[Address::SESSION_ERROR] : "";
 		Address::clearMsgError();
 		return $msg;
 	}
+
+
+	//*******************************************************
 	public static function clearMsgError()
 	{
 		$_SESSION[Address::SESSION_ERROR] = NULL;
